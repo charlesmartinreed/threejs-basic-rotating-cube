@@ -1,36 +1,40 @@
 // 1. Create a SCENE - this sets up what to render and where it will be placed
-const scene = new THREE.Scene();
+let scene, camera, renderer, cube;
 
-// 2. Setup the CAMERA, in this example we're using the PerspectiveCamera type
-// takes in FOV, ASPECT, NEAR PLANE, FAR PLANE (plane values set the render min/max distances)
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-);
+function init() {
+  scene = new THREE.Scene();
 
-// 3. Initialize your RENDERER and set its SIZE
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
+  // 2. Setup the CAMERA, in this example we're using the PerspectiveCamera type
+  // takes in FOV, ASPECT, NEAR PLANE, FAR PLANE (plane values set the render min/max distances)
+  camera = new THREE.PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000
+  );
 
-// 4. Add the RENDERER TO THE DOM
-document.body.appendChild(renderer.domElement);
+  // 3. Initialize your RENDERER and set its SIZE
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
 
-//5. Using a box geometry object, which is a Geo class for a rect cuboid
+  // 4. Add the RENDERER TO THE DOM
+  document.body.appendChild(renderer.domElement);
 
-// (depth, width, height)
-const geometry = new THREE.BoxGeometry(2, 2, 2);
-const material = new THREE.MeshBasicMaterial({ color: 0x0000ff });
+  //5. Using a box geometry object, which is a Geo class for a rect cuboid
 
-// create a mesh using the object, the textures, etc.
-const cube = new THREE.Mesh(geometry, material);
+  // (depth, width, height)
+  const geometry = new THREE.BoxGeometry(2, 2, 2);
+  const material = new THREE.MeshBasicMaterial({ color: 0x0000ff });
 
-// 6. Add the object to the scene and draw it to the screen each time the screen is refreshed
-scene.add(cube);
+  // create a mesh using the object, the textures, etc.
+  cube = new THREE.Mesh(geometry, material);
 
-// 7. By default, camera coords place the camera inside the cube, so let's set it manually
-camera.position.z = 5;
+  // 6. Add the object to the scene and draw it to the screen each time the screen is refreshed
+  scene.add(cube);
+
+  // 7. By default, camera coords place the camera inside the cube, so let's set it manually
+  camera.position.z = 5;
+}
 
 function animate() {
   requestAnimationFrame(animate);
@@ -43,4 +47,18 @@ function animate() {
   renderer.render(scene, camera);
 }
 
+function onWindowResize() {
+  // 1. set the camera aspect again
+  camera.aspect = window.innerWidth / window.innerHeight;
+
+  camera.updateProjectionMatrix();
+
+  // reset the renderer size to the entire window
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+// now, when a resize is detected, the cube will be repositioned into the center of the screen
+window.addEventListener("resize", onWindowResize, false);
+
+init();
 animate();
