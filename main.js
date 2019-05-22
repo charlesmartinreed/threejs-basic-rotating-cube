@@ -24,7 +24,11 @@ function init() {
 
   // (depth, width, height)
   const geometry = new THREE.BoxGeometry(2, 2, 2);
-  const material = new THREE.MeshBasicMaterial({ color: 0x0000ff });
+  // const material = new THREE.MeshBasicMaterial({ color: 0x0000ff });
+
+  // 5a. Create a texture and add it to the material
+  const texture = new THREE.TextureLoader().load("textures/crate.gif");
+  const material = new THREE.MeshBasicMaterial({ map: texture });
 
   // create a mesh using the object, the textures, etc.
   cube = new THREE.Mesh(geometry, material);
